@@ -32,34 +32,9 @@ private:
     std::vector<std::thread*>thread_list;
     std::mutex lock_task_list;
     std::mutex lock_thread;
-    std::condition_variable condition_lock;
     PriorityQueue<Task*>task_list;
     void runTask()
     {
-       /* while (true)
-        {
-            std::unique_lock<std::mutex>lock_guard(lock_task_list);
-            if (task_list.empty() && NowThread > MinThread)
-            {
-                deleteThread(std::this_thread::get_id());
-                lock_guard.unlock();
-                break;
-            }
-            condition_lock.wait(lock_guard, [this] {
-                return task_list.empty() ? false : true;
-                });
-            if (task_list.size() > NowThread * 2 && NowThread < MaxThread)
-            {
-                creatThread();
-            }
-            Task* task = task_list.top();
-            task_list.pop();
-            std::cout << "当前线程数量：" << thread_list.size() << std::endl;
-            std::cout << "当前任务数量：" << task_list.size() << std::endl;
-            lock_guard.unlock();
-            task->f(task->_parameter);
-            delete task;
-        }*/
         while (true)
         {
             lock_thread.lock();
@@ -87,8 +62,6 @@ private:
             Task* task = task_list.top();
             task_list.pop();
             lock_task_list.unlock();
-            std::cout << "当前线程数量：" << thread_list.size() << std::endl;
-            std::cout << "当前任务数量：" << task_list.size() << std::endl;
             lock_thread.unlock();
             task->f(task->_parameter);
             delete task;
@@ -177,6 +150,5 @@ public:
         lock_task_list.lock();
         task_list.push(task);
         lock_task_list.unlock();
-        condition_lock.notify_one();
     }
 };
