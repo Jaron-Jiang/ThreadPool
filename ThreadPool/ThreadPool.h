@@ -5,13 +5,6 @@
 #include<condition_variable>
 #include"PriorityQueue.h"
 
-/// <summary>
-/// 执行的任务返回类型必须是void类型，任务必须有一个参数，不管使不使用这个参数
-/// 即任务声明必须为【void funtion_name(task_paramete_type parameter_name)】
-/// 同时task_parameter_type结构体必须对<运行符进行重载，用于比较任务的优先级
-/// 任务必须是普通函数，不能是成员函数
-/// </summary>
-/// <typeparam name="task_parameter_type">task_parameter_type</typeparam>
 template<typename task_parameter_type>
 class ThreadPool
 {
